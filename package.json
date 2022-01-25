@@ -1,0 +1,24 @@
+{
+  "name": "diograph-js",
+  "version": "0.0.1",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "author": "Jouni Alanen <jouni@diory.me>",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.5.5",
+    "prettier": "^2.5.1"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prettier": "prettier --write ."
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "printWidth": 100,
+    "trailingComma": "all"
+  }
+}
