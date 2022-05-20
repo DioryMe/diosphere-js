@@ -1,0 +1,44 @@
+name: Publish to NPM
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Specify the version to publish'
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+      - name: Update version using Yarn
+        run: |
+          git config user.email "<>"
+          git config user.name "GitHub Actions Bot"
+          yarn version --new-version ${{ github.event.inputs.version }}
+
+      - name: Push version update commit
+        run: git push origin HEAD --follow-tags
+
+      - name: Publish to NPM
+        run: npm publish --access=public --tag=next
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
