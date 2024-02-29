@@ -1,15 +1,12 @@
 {
-  "name": "@diograph/diograph",
-  "version": "0.2.2-rc2",
+  "name": "@diory/diosphere",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/**/*.d.ts",
   "author": "Olli-Pekka Pohjola <op@diory.me>, Jouni Alanen <jouni@diory.me>",
   "license": "MIT",
   "dependencies": {
-    "@types/path-browserify": "^1.0.0",
     "@types/uuid": "8.3.2",
-    "ajv": "^8.12.0",
-    "path-browserify": "^1.0.1",
     "uuid": "8.3.2"
   },
   "devDependencies": {
@@ -25,7 +22,8 @@
     "prettier": "prettier --write .",
     "test": "jest . --verbose",
     "test-watch": "yarn test --watch",
-    "prepare": "yarn prettier && yarn test && yarn build"
+    "prepare": "yarn prettier && yarn test && yarn build",
+    "publish": "yarn version && npm publish"
   },
   "prettier": {
     "tabWidth": 2,
@@ -36,14 +34,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DioryMe/diograph-js.git"
+    "url": "git+https://github.com/DioryMe/diosphere-js.git"
   },
   "keywords": [
     "diory",
-    "diograph"
+    "diosphere"
   ],
   "bugs": {
-    "url": "https://github.com/DioryMe/diograph-js/issues"
+    "url": "https://github.com/DioryMe/diosphere-js/issues"
   },
-  "homepage": "https://github.com/DioryMe/diograph-js#readme"
+  "homepage": "https://github.com/DioryMe/diosphere-js#readme"
 }

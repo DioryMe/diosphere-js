@@ -1,122 +1,61 @@
-# Diograph
+# Diosphere
 
 ## Install
 
 ```
-npm install @diograph/diograph
+npm install @diory/diosphere
 # or
-yarn add @diograph/diograph
+yarn add @diory/diosphere
 ```
 
 ## Usage
 
 ```
-import { Diograph } from '@diograph/diograph'
-const diograph = new Diograph()
-diograph.createDiory({ text: 'Hello diory!' })
-console.log('Hello Diograph!', diograph)
+import { Diosphere } from '@diory/diosphere'
+const diosphere = new Diosphere()
+diosphere.createRoom({ text: 'Hello room!' })
+console.log('Hello Diosphere!', diosphere.toObject())
 ```
 
 ## API
 
 ```
-const diograph = new Diograph(diographObject)
+const diosphere = new Diosphere(diosphereObject)
 ```
 
-### Diograph
+### Diosphere
 
 ```
-diograph.addDiograph(diographObject)
-diograph.queryDiograph({ text: 'some-text' })
-diograph.resetDiograph()
-diograph.toObject()
-diograph.toJson()
+diosphere.addDiosphere(diosphereObject)
+diosphere.queryDiosphere({ text: 'some-text' })
+diosphere.resetDiosphere()
+diosphere.toObject()
+diosphere.toJson()
 
-diograph.getDiory(someDiory)
-diograph.addDiory(someDiory)
-diograph.updateDiory(someDiory)
-diograph.removeDiory(someDiory)
-diograph.addDioryLink(someDiory, linkedDiory)
-diograph.removeDioryLink(someDiory, linkedDiory)
-```
-
-### Diory
-
-```
-const diory = new Diory()
-diory.updateDiory(dioryObject)
-
-diory.addLink(linkedDiory)
-diory.removeLink(linkedDiory)
-
-diory.toObject()
-diory.toJson()
+diosphere.getRoom(someRoom)
+diosphere.addRoom(someRoom)
+diosphere.updateRoom(someRoom)
+diosphere.removeRoom(someRoom)
+diosphere.addRoomDoor(someRoom, dooredRoom)
+diosphere.removeRoomDoor(someRoom, dooredRoom)
+diosphere.addRoomConnection(someRoom, dooredRoom)
+diosphere.removeRoomConnection(someRoom, dooredRoom)
 ```
 
 ### Room
 
 ```
-loadRoom(clients)
-- set room object contents from room.json: connections & diograph
-- initiate connections if proper client is passed
+const room = new Room()
+room.updateRoom(roomObject)
 
-initiateRoom(clients, connections, diographObject)
-- set room object contents from arguments: connections & diograph
+room.addDoor(door)
+room.removeDoor(door)
 
-addConnection(connection)
-- attach a connection to room
+room.addConnection(connection)
+room.removeConnection(connection)
 
-removeConnection(connection)
-- de-attach connection from room
-
-readContent(contentUrl)
-- read buffer of the given content
-
-addContent(fileContent)
-- adds content to nativeConnection
-
-deleteRoom()
-- delete room.json and diograph.json
-- delete the folder in room.address
-
-saveRoom()
-- save room.json and diograph.json to room's writable media
-
-toObject()
-- room as RoomObject
-
-toJson()
-- room as JSON string
-```
-
-### Connection
-
-```
-initiateConnection()
-- set connection object contens from arguments: contentUrls & diograph
-
-addContentUrl(contentId)
-- used when listing a content folder contents to connection
-  - in this case content is not added to connection (as it already exists!)
-
-addContent(fileContent, contentId)
-- saves content to connection writable media
-- adds contentUrl to connection contentUrls
-
-readContent(contentId)
-- content buffer
-- loaded using the connection client
-
-deleteContent(contentId)
-- deletes contentId
-- removes contentId from connection contentUrls listing
-
-deleteConnection()
-- calls deleteContent for each contentUrl
-- delete the folder in connection.address
-
-toObject()
-- connection as ConnectionObject
+room.toObject()
+room.toJson()
 ```
 
 ## Development
