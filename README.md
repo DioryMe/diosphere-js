@@ -3,9 +3,9 @@
 ## Install
 
 ```
-npm install @diory/diosphere
+npm install @diory/diosphere-js
 # or
-yarn add @diory/diosphere
+yarn add @diory/diosphere-js
 ```
 
 ## Usage
@@ -20,26 +20,50 @@ console.log('Hello Diosphere!', diosphere.toObject())
 ## API
 
 ```
-const diosphere = new Diosphere(diosphereObject)
+const diosphere = new Diosphere(roomsObject)
+```
+
+### Client
+
+```
+npm install @diory/client-js
+
+const clients = [localClient, S3Client, ...]
+const { diosphere, room, diograph, diory, content } = DioryClient(clients)
+diosphere.connect(connection)
+diosphere.enterRoom(room)
+diograph.focusDiory(diory)
+```
+
+#### Internal methods
+
+```
+client.getDiosphere()
+client.saveDiosphere()
+client.getDiograph()
+client.saveDiograph()
+client.getContentUrl()
 ```
 
 ### Diosphere
 
 ```
-diosphere.addDiosphere(diosphereObject)
+diosphere.addDiosphere(roomsObject)
 diosphere.queryDiosphere({ text: 'some-text' })
 diosphere.resetDiosphere()
 diosphere.toObject()
 diosphere.toJson()
 
+diosphere.enterRoom(someRoom)
+
 diosphere.getRoom(someRoom)
 diosphere.addRoom(someRoom)
 diosphere.updateRoom(someRoom)
 diosphere.removeRoom(someRoom)
-diosphere.addRoomDoor(someRoom, dooredRoom)
-diosphere.removeRoomDoor(someRoom, dooredRoom)
-diosphere.addRoomConnection(someRoom, dooredRoom)
-diosphere.removeRoomConnection(someRoom, dooredRoom)
+diosphere.addRoomDoor(someRoom, someDoorToRoom)
+diosphere.removeRoomDoor(someRoom, someDoorToRoom)
+diosphere.addRoomConnection(someRoom, someConnection)
+diosphere.removeRoomConnection(someRoom, someConnection)
 ```
 
 ### Room

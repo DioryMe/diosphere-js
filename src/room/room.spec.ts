@@ -95,7 +95,7 @@ describe('Room', () => {
     describe('given connections array', () => {
       const someConnection = {
         id: 'some-connection-id',
-        connector: 'some-connector',
+        client: 'some-client',
         address: 'some-address',
       }
 
@@ -276,7 +276,7 @@ describe('Room', () => {
         it('adds connections array to room connections', () => {
           const someConnection = {
             id: 'some-connection-id',
-            connector: 'some-connector',
+            client: 'some-client',
             address: 'some-address',
           }
           roomProps.connections = [someConnection]

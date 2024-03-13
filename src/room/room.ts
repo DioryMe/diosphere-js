@@ -6,12 +6,13 @@ import { throwErrorIfAlreadyExists } from '../utils/throwErrorIfAlreadyExists'
 import { getIds } from '../utils/getIds'
 
 import { IRoom, IRoomObject, IRoomProps, IDoorObject, IConnectionObject } from '../types'
+import { removeById } from '../utils/removeById'
 
 class Room implements IRoom {
+  connections?: IConnectionObject[] = undefined
   id: string
   text?: string = undefined
   doors?: IDoorObject[] = undefined
-  connections?: IConnectionObject[] = undefined
   created?: string = undefined
   modified?: string = undefined
 
@@ -57,14 +58,7 @@ class Room implements IRoom {
   removeDoor(doorObject: IDoorObject): IRoom {
     throwErrorIfNotFound('removeDoor', doorObject.id, getIds(this.doors))
 
-    const doorIndex = getIds(this.doors)?.indexOf(doorObject.id)
-    if (doorIndex != -1) {
-      this.doors?.splice(doorIndex!, 1)
-    }
-
-    if (this.doors!.length === 0) {
-      this.doors = undefined
-    }
+    this.doors = removeById(doorObject.id, this.doors)
 
     return this.update({})
   }
@@ -84,16 +78,17 @@ class Room implements IRoom {
   removeConnection(connectionObject: IConnectionObject): IRoom {
     throwErrorIfNotFound('removeDoor', connectionObject.id, getIds(this.connections))
 
-    const index = getIds(this.connections)?.indexOf(connectionObject.id)
-    if (index != -1) {
-      this.connections?.splice(index!, 1)
-    }
-
-    if (this.connections!.length === 0) {
-      this.connections = undefined
-    }
+    this.connections = removeById(connectionObject.id, this.connections)
 
     return this.update({})
+  }
+
+  then = (callback?: () => void): IRoom => {
+    if (callback) {
+      callback()
+    }
+
+    return this
   }
 
   toObject = (): IRoomObject => {

@@ -1,16 +1,20 @@
 {
-  "name": "@diory/diosphere",
-  "version": "0.1.0",
+  "name": "@diory/diosphere-js",
+  "version": "0.2.3-rc9",
   "main": "dist/index.js",
   "types": "dist/**/*.d.ts",
   "author": "Olli-Pekka Pohjola <op@diory.me>, Jouni Alanen <jouni@diory.me>",
   "license": "MIT",
   "dependencies": {
-    "@types/uuid": "8.3.2",
+    "@diograph/diograph": "0.1.2-rc3",
+    "path": "^0.12.7",
+    "path-browserify": "^1.0.1",
     "uuid": "8.3.2"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
+    "@types/path-browserify": "^1.0.2",
+    "@types/uuid": "8.3.2",
     "jest": "^27.5.0",
     "prettier": "^2.5.1",
     "ts-jest": "^27.1.3",
@@ -23,7 +27,8 @@
     "test": "jest . --verbose",
     "test-watch": "yarn test --watch",
     "prepare": "yarn prettier && yarn test && yarn build",
-    "publish": "yarn version && npm publish"
+    "release-candidate": "yarn version --no-git-tag-version && npm publish",
+    "release": "yarn version && npm publish"
   },
   "prettier": {
     "tabWidth": 2,
