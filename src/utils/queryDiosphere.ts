@@ -1,4 +1,4 @@
-import { IRoomProps, IRoomObject, IDiosphereObject } from '../types'
+import { IRoomProps, IRoomObject, IRoomsObject } from '../types'
 
 function allKeysExist(queryRoom: IRoomProps) {
   return (room: IRoomObject): boolean =>
@@ -15,22 +15,16 @@ function allMatchToQuery(queryRoom: IRoomProps) {
     )
 }
 
-function reduceToDiosphereObject(
-  diosphereObject: IDiosphereObject,
-  room: IRoomObject,
-): IDiosphereObject {
+function reduceToRoomsObject(roomsObject: IRoomsObject, room: IRoomObject): IRoomsObject {
   return {
-    ...diosphereObject,
+    ...roomsObject,
     [room.id]: room,
   }
 }
 
-export function queryDiosphere(
-  queryRoom: IRoomProps,
-  diosphere: IDiosphereObject,
-): IDiosphereObject {
+export function queryDiosphere(queryRoom: IRoomProps, diosphere: IRoomsObject): IRoomsObject {
   return Object.values(diosphere)
     .filter(allKeysExist(queryRoom))
     .filter(allMatchToQuery(queryRoom))
-    .reduce(reduceToDiosphereObject, {})
+    .reduce(reduceToRoomsObject, {})
 }

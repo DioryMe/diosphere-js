@@ -3,9 +3,9 @@
 ## Install
 
 ```
-npm install @diory/diosphere
+npm install @diory/diosphere-js
 # or
-yarn add @diory/diosphere
+yarn add @diory/diosphere-js
 ```
 
 ## Usage
@@ -13,33 +13,31 @@ yarn add @diory/diosphere
 ```
 import { Diosphere } from '@diory/diosphere'
 const diosphere = new Diosphere()
-diosphere.createRoom({ text: 'Hello room!' })
+diosphere.addRoom({ text: 'Hello room!' })
 console.log('Hello Diosphere!', diosphere.toObject())
 ```
 
 ## API
 
-```
-const diosphere = new Diosphere(diosphereObject)
-```
-
 ### Diosphere
 
 ```
-diosphere.addDiosphere(diosphereObject)
+diosphere.initialise(roomsObject)
 diosphere.queryDiosphere({ text: 'some-text' })
 diosphere.resetDiosphere()
 diosphere.toObject()
 diosphere.toJson()
 
+diosphere.enterRoom(someRoom)
+
 diosphere.getRoom(someRoom)
 diosphere.addRoom(someRoom)
 diosphere.updateRoom(someRoom)
 diosphere.removeRoom(someRoom)
-diosphere.addRoomDoor(someRoom, dooredRoom)
-diosphere.removeRoomDoor(someRoom, dooredRoom)
-diosphere.addRoomConnection(someRoom, dooredRoom)
-diosphere.removeRoomConnection(someRoom, dooredRoom)
+diosphere.addRoomDoor(someRoom, someDoorToRoom)
+diosphere.removeRoomDoor(someRoom, someDoorToRoom)
+diosphere.addRoomConnection(someRoom, someConnection)
+diosphere.removeRoomConnection(someRoom, someConnection)
 ```
 
 ### Room

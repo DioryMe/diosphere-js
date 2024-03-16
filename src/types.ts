@@ -5,7 +5,7 @@ export interface IDoorObject {
 
 export interface IConnectionObject {
   id: string
-  connector: string
+  client: string
   address: string
 }
 
@@ -27,27 +27,33 @@ export interface IRoom extends IRoomObject {
   removeDoor: (doorObject: IDoorObject) => IRoom
   addConnection: (connectionObject: IConnectionObject) => IRoom
   removeConnection: (connectionObject: IConnectionObject) => IRoom
+  then: (callback?: () => void) => IRoom
   toObject: () => IRoomObject
 }
 
-export interface IDiosphereObject {
+export interface IRoomsObject {
   // TODO: Make '/' required
   // '/': IRoomObject
   [key: string]: IRoomObject
 }
 
+export interface IDiosphereObject {
+  rooms: IRoomsObject
+}
+
 export interface IDiosphere {
-  diosphere: { [index: string]: IRoom }
-  addDiosphere: (diosphereObject: IDiosphereObject) => IDiosphere
-  queryDiosphere: (roomObject: IRoomProps) => IDiosphere
-  resetDiosphere: () => IDiosphere
+  rooms: { [index: string]: IRoom }
+  initialise: (diosphereObject: IDiosphereObject) => IDiosphere
+  queryRooms: (roomObject: IRoomProps) => IDiosphere
+  resetRooms: () => IDiosphere
   getRoom: (roomObject: IRoomObject) => IRoom
   addRoom: (roomProps: IRoomProps | IRoomObject | IRoom, key?: string) => IRoom
   updateRoom: (roomObject: IRoomObject) => IRoom
-  removeRoom: (roomObject: IRoomObject) => boolean
+  removeRoom: (roomObject: IRoomObject) => void
   addRoomDoor: (roomObject: IRoomObject, doorObject: IDoorObject) => IRoom
   removeRoomDoor: (roomObject: IRoomObject, doorObject: IDoorObject) => IRoom
   addRoomConnection: (roomObject: IRoomObject, connectionObject: IConnectionObject) => IRoom
   removeRoomConnection: (roomObject: IRoomObject, connectionObject: IConnectionObject) => IRoom
+  saveDiosphere: (callback?: () => void) => void
   toObject: () => IDiosphereObject
 }
