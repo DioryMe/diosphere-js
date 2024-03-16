@@ -24,13 +24,14 @@ const diosphere = new Diosphere(roomsObject)
 ```
 
 ### Client
+TODO: Move to own lib
 
 ```
 npm install @diory/client-js
 
 const clients = [localClient, S3Client, ...]
-const { diosphere, room, diograph, diory, content } = DioryClient(clients)
-diosphere.connect(connection)
+const { diosphere, room, diograph, diory, // content } = DioryClient(clients)
+diosphere.initialise([connection])
 diosphere.enterRoom(room)
 diograph.focusDiory(diory)
 ```
@@ -42,13 +43,13 @@ client.getDiosphere()
 client.saveDiosphere()
 client.getDiograph()
 client.saveDiograph()
-client.getContentUrl()
+// client.getContentUrl()
 ```
 
 ### Diosphere
 
 ```
-diosphere.addDiosphere(roomsObject)
+diosphere.initialise(roomsObject)
 diosphere.queryDiosphere({ text: 'some-text' })
 diosphere.resetDiosphere()
 diosphere.toObject()
