@@ -1,77 +1,53 @@
-import { RoomClient } from '.'
-
-export interface IDataObject {
-  '@context': string
-  '@type': string
-  contentUrl: string
-  encodingFormat: string
-  height?: number
-  width?: number
-}
-
-export interface ILinkObject {
+export interface IDoorObject {
   id: string
   path?: string
 }
 
-export interface IDioryProps {
+export interface IConnectionObject {
+  id: string
+  connector: string
+  address: string
+}
+
+export interface IRoomProps {
   text?: string
-  image?: string
-  latlng?: string
-  date?: string
-  data?: IDataObject[]
-  links?: { [index: string]: ILinkObject }
+  doors?: IDoorObject[]
+  connections?: IConnectionObject[]
   created?: string
   modified?: string
 }
 
-export interface IDioryObject extends IDioryProps {
+export interface IRoomObject extends IRoomProps {
   id: string
 }
 
-export interface IDiory extends IDioryObject {
-  update: (dioryProps: IDioryProps, addOnly?: boolean) => IDiory
-  addLink: (linkedDioryObject: IDioryObject) => IDiory
-  removeLink: (linkedDioryObject: IDioryObject) => IDiory
-  toObject: () => IDioryObject
-  toObjectWithoutImage: () => IDioryObject
+export interface IRoom extends IRoomObject {
+  update: (roomProps: IRoomProps, addOnly?: boolean) => IRoom
+  addDoor: (doorObject: IDoorObject) => IRoom
+  removeDoor: (doorObject: IDoorObject) => IRoom
+  addConnection: (connectionObject: IConnectionObject) => IRoom
+  removeConnection: (connectionObject: IConnectionObject) => IRoom
+  toObject: () => IRoomObject
 }
 
-export interface IDiographObject {
+export interface IDiosphereObject {
   // TODO: Make '/' required
-  // '/': IDioryObject
-  [key: string]: IDioryObject
+  // '/': IRoomObject
+  [key: string]: IRoomObject
 }
 
-export interface IDiograph {
-  diograph: { [index: string]: IDiory }
-  diories: () => Array<IDiory>
-  addDiograph: (diographObject: IDiographObject, rootId?: string) => IDiograph
-  queryDiograph: (dioryObject: IDioryProps) => IDiograph
-  resetDiograph: () => IDiograph
-  getDiory: (dioryObject: IDioryObject) => IDiory
-  addDiory: (dioryProps: IDioryProps | IDioryObject | IDiory, key?: string) => IDiory
-  updateDiory: (dioryObject: IDioryObject) => IDiory
-  removeDiory: (dioryObject: IDioryObject) => boolean
-  addDioryLink: (dioryObject: IDioryObject, linkedDioryObject: IDioryObject) => IDiory
-  removeDioryLink: (dioryObject: IDioryObject, linkedDioryObject: IDioryObject) => IDiory
-  toObject: () => IDiographObject
-  loadDiograph: (roomClient: RoomClient) => Promise<void>
-  saveDiograph: (roomClient: RoomClient) => Promise<void>
-}
-
-export interface RoomObject {
-  connections: ConnectionObject[]
-  diograph?: IDiographObject
-}
-
-export interface ContentUrls {
-  [key: string]: string
-}
-
-export interface ConnectionObject {
-  address: string
-  contentClientType: string
-  contentUrls?: ContentUrls
-  diograph?: IDiographObject
+export interface IDiosphere {
+  diosphere: { [index: string]: IRoom }
+  addDiosphere: (diosphereObject: IDiosphereObject) => IDiosphere
+  queryDiosphere: (roomObject: IRoomProps) => IDiosphere
+  resetDiosphere: () => IDiosphere
+  getRoom: (roomObject: IRoomObject) => IRoom
+  addRoom: (roomProps: IRoomProps | IRoomObject | IRoom, key?: string) => IRoom
+  updateRoom: (roomObject: IRoomObject) => IRoom
+  removeRoom: (roomObject: IRoomObject) => boolean
+  addRoomDoor: (roomObject: IRoomObject, doorObject: IDoorObject) => IRoom
+  removeRoomDoor: (roomObject: IRoomObject, doorObject: IDoorObject) => IRoom
+  addRoomConnection: (roomObject: IRoomObject, connectionObject: IConnectionObject) => IRoom
+  removeRoomConnection: (roomObject: IRoomObject, connectionObject: IConnectionObject) => IRoom
+  toObject: () => IDiosphereObject
 }

@@ -1,11 +1,11 @@
-import { IDioryObject } from '../types'
+import { IRoomObject } from '../types'
 
-export function propIsValid(dioryObject: IDioryObject, prop: string): boolean {
+export function propIsValid(roomObject: IRoomObject, prop: string): boolean {
   if (prop === 'id') {
     return false
   }
 
-  if (Object.getOwnPropertyNames(dioryObject).includes(prop)) return true
+  if (Object.getOwnPropertyNames(roomObject).includes(prop)) return true
 
   console.error('Prop is not valid:', prop)
   return false
