@@ -1,8 +1,8 @@
 {
   "name": "@diory/diosphere-js",
-  "version": "0.2.5-rc1",
+  "version": "0.2.5",
   "main": "dist/index.js",
-  "types": "dist/types.d.ts",
+  "types": "dist/index.d.ts",
   "author": "Olli-Pekka Pohjola <op@diory.me>, Jouni Alanen <jouni@diory.me>",
   "license": "MIT",
   "dependencies": {
