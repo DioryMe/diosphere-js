@@ -1,9 +1,3 @@
-import { Room } from '../room/room'
-
-import { queryDiosphere } from '../utils/queryDiosphere'
-import { throwErrorIfNotFound } from '../utils/throwErrorIfNotFound'
-import { throwErrorIfAlreadyExists } from '../utils/throwErrorIfAlreadyExists'
-
 import {
   IRoom,
   IRoomObject,
@@ -14,6 +8,12 @@ import {
   IDoorObject,
   IDiosphereObject,
 } from '../types'
+
+import { Room } from '../room/room'
+
+import { queryDiosphere } from '../utils/queryDiosphere'
+import { throwErrorIfNotFound } from '../utils/throwErrorIfNotFound'
+import { throwErrorIfAlreadyExists } from '../utils/throwErrorIfAlreadyExists'
 
 function isRoomAlias(roomObject: IRoomObject, room: IRoom) {
   return room.id !== roomObject.id
@@ -108,7 +108,6 @@ class Diosphere implements IDiosphere {
 
   removeRoomDoor = (roomObject: IRoomObject, doorObject: IDoorObject): IRoom => {
     throwErrorIfNotFound('removeRoomDoor:room', roomObject.id, Object.keys(this.rooms))
-    throwErrorIfNotFound('removeRoomDoor:doorToRoom', doorObject.id, Object.keys(this.rooms))
 
     return this.getRoom(roomObject).removeDoor(doorObject).then(this.saveDiosphere)
   }
