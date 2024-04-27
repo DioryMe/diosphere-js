@@ -1,18 +1,18 @@
 import { v4 as uuid } from 'uuid'
 
-import { propIsValid, valueIsValid, valueExists } from './validators'
+import { IRoom, IRoomObject, IRoomProps, IDoorObject, IConnectionObject } from '../types'
+
+import { propIsValid, valueIsValid, valueExists } from '../utils/validators'
 import { throwErrorIfNotFound } from '../utils/throwErrorIfNotFound'
 import { throwErrorIfAlreadyExists } from '../utils/throwErrorIfAlreadyExists'
 import { getIds } from '../utils/getIds'
-
-import { IRoom, IRoomObject, IRoomProps, IDoorObject, IConnectionObject } from '../types'
 import { removeById } from '../utils/removeById'
 
 class Room implements IRoom {
-  connections?: IConnectionObject[] = undefined
   id: string
   text?: string = undefined
   doors?: IDoorObject[] = undefined
+  connections?: IConnectionObject[] = undefined
   created?: string = undefined
   modified?: string = undefined
 
@@ -64,7 +64,7 @@ class Room implements IRoom {
   }
 
   addConnection(connectionObject: IConnectionObject): IRoom {
-    throwErrorIfAlreadyExists('addDoor', connectionObject.id, getIds(this.doors))
+    throwErrorIfAlreadyExists('addConnection', connectionObject.id, getIds(this.connections))
 
     if (!this.connections) {
       this.connections = []
@@ -76,14 +76,14 @@ class Room implements IRoom {
   }
 
   removeConnection(connectionObject: IConnectionObject): IRoom {
-    throwErrorIfNotFound('removeDoor', connectionObject.id, getIds(this.connections))
+    throwErrorIfNotFound('removeConnection', connectionObject.id, getIds(this.connections))
 
     this.connections = removeById(connectionObject.id, this.connections)
 
     return this.update({})
   }
 
-  then = (callback?: () => void): IRoom => {
+  save = (callback?: () => void): IRoom => {
     if (callback) {
       callback()
     }
