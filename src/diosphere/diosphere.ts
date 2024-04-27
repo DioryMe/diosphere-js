@@ -1,9 +1,3 @@
-import { Room } from '../room/room'
-
-import { queryDiosphere } from '../utils/queryDiosphere'
-import { throwErrorIfNotFound } from '../utils/throwErrorIfNotFound'
-import { throwErrorIfAlreadyExists } from '../utils/throwErrorIfAlreadyExists'
-
 import {
   IRoom,
   IRoomObject,
@@ -15,6 +9,12 @@ import {
   IDiosphereObject,
 } from '../types'
 
+import { Room } from '../room/room'
+
+import { queryDiosphere } from '../utils/queryDiosphere'
+import { throwErrorIfNotFound } from '../utils/throwErrorIfNotFound'
+import { throwErrorIfAlreadyExists } from '../utils/throwErrorIfAlreadyExists'
+
 function isRoomAlias(roomObject: IRoomObject, room: IRoom) {
   return room.id !== roomObject.id
 }
@@ -24,11 +24,11 @@ class Diosphere implements IDiosphere {
 
   constructor(diosphereObject?: IDiosphereObject) {
     if (diosphereObject) {
-      this.initialise(diosphereObject)
+      this.addDiosphere(diosphereObject)
     }
   }
 
-  initialise = (diosphere: IDiosphereObject): IDiosphere => {
+  addDiosphere = (diosphere: IDiosphereObject): IDiosphere => {
     const { rooms = {} } = diosphere
     Object.entries(rooms).forEach(([key, roomObject]) => {
       try {
@@ -74,7 +74,7 @@ class Diosphere implements IDiosphere {
         this.rooms[room.id] = room
       }
 
-      return (this.rooms[key] = room).then(this.saveDiosphere)
+      return (this.rooms[key] = room).save(this.saveDiosphere)
     }
 
     if ('id' in roomObject) {
@@ -82,13 +82,13 @@ class Diosphere implements IDiosphere {
     }
 
     const room: IRoom = new Room(roomObject)
-    return (this.rooms[room.id] = room).then(this.saveDiosphere)
+    return (this.rooms[room.id] = room).save(this.saveDiosphere)
   }
 
   updateRoom = (roomObject: IRoomObject): IRoom => {
     throwErrorIfNotFound('updateRoom', roomObject.id, Object.keys(this.rooms))
 
-    return this.getRoom(roomObject).update(roomObject).then(this.saveDiosphere)
+    return this.getRoom(roomObject).update(roomObject).save(this.saveDiosphere)
   }
 
   removeRoom = (roomObject: IRoomObject): void => {
@@ -103,29 +103,28 @@ class Diosphere implements IDiosphere {
     throwErrorIfNotFound('addRoomDoor:room', roomObject.id, Object.keys(this.rooms))
     throwErrorIfNotFound('addRoomDoor:doorToRoom', doorObject.id, Object.keys(this.rooms))
 
-    return this.getRoom(roomObject).addDoor(doorObject).then(this.saveDiosphere)
+    return this.getRoom(roomObject).addDoor(doorObject).save(this.saveDiosphere)
   }
 
   removeRoomDoor = (roomObject: IRoomObject, doorObject: IDoorObject): IRoom => {
     throwErrorIfNotFound('removeRoomDoor:room', roomObject.id, Object.keys(this.rooms))
-    throwErrorIfNotFound('removeRoomDoor:doorToRoom', doorObject.id, Object.keys(this.rooms))
 
-    return this.getRoom(roomObject).removeDoor(doorObject).then(this.saveDiosphere)
+    return this.getRoom(roomObject).removeDoor(doorObject).save(this.saveDiosphere)
   }
 
   addRoomConnection = (roomObject: IRoomObject, connectionObject: IConnectionObject): IRoom => {
     throwErrorIfNotFound('addRoomConnection:room', roomObject.id, Object.keys(this.rooms))
 
-    return this.getRoom(roomObject).addConnection(connectionObject).then(this.saveDiosphere)
+    return this.getRoom(roomObject).addConnection(connectionObject).save(this.saveDiosphere)
   }
 
   removeRoomConnection = (roomObject: IRoomObject, connectionObject: IConnectionObject): IRoom => {
     throwErrorIfNotFound('removeRoomConnection:room', roomObject.id, Object.keys(this.rooms))
 
-    return this.getRoom(roomObject).removeConnection(connectionObject).then(this.saveDiosphere)
+    return this.getRoom(roomObject).removeConnection(connectionObject).save(this.saveDiosphere)
   }
 
-  saveDiosphere = (): void => {}
+  saveDiosphere = async (): Promise<IDiosphere> => Promise.resolve(this)
 
   toObject = (): { rooms: IRoomsObject; room?: IRoomObject } => {
     const rooms: IRoomsObject = {}

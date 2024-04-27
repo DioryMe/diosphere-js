@@ -38,10 +38,10 @@ describe('diosphere', () => {
       })
     })
 
-    describe('when initialise()', () => {
+    describe('when addDiosphere()', () => {
       describe('given other room', () => {
         beforeEach(() => {
-          diosphere.initialise({
+          diosphere.addDiosphere({
             rooms: {
               'other-id': { id: 'other-id' },
             },
@@ -267,7 +267,7 @@ describe('diosphere', () => {
 
     describe('given diosphere with query text in a room', () => {
       beforeEach(() => {
-        diosphere.initialise({
+        diosphere.addDiosphere({
           rooms: {
             'query-id': {
               id: 'query-id',

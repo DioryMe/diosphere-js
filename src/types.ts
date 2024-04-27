@@ -27,7 +27,7 @@ export interface IRoom extends IRoomObject {
   removeDoor: (doorObject: IDoorObject) => IRoom
   addConnection: (connectionObject: IConnectionObject) => IRoom
   removeConnection: (connectionObject: IConnectionObject) => IRoom
-  then: (callback?: () => void) => IRoom
+  save: (callback?: () => void) => IRoom
   toObject: () => IRoomObject
 }
 
@@ -43,7 +43,7 @@ export interface IDiosphereObject {
 
 export interface IDiosphere {
   rooms: { [index: string]: IRoom }
-  initialise: (diosphereObject: IDiosphereObject) => IDiosphere
+  addDiosphere: (diosphereObject: IDiosphereObject) => IDiosphere
   queryRooms: (roomObject: IRoomProps) => IDiosphere
   resetRooms: () => IDiosphere
   getRoom: (roomObject: IRoomObject) => IRoom
@@ -54,6 +54,6 @@ export interface IDiosphere {
   removeRoomDoor: (roomObject: IRoomObject, doorObject: IDoorObject) => IRoom
   addRoomConnection: (roomObject: IRoomObject, connectionObject: IConnectionObject) => IRoom
   removeRoomConnection: (roomObject: IRoomObject, connectionObject: IConnectionObject) => IRoom
-  saveDiosphere: (callback?: () => void) => void
+  saveDiosphere: (connectionObjects?: IConnectionObject[]) => Promise<IDiosphereObject>
   toObject: () => IDiosphereObject
 }
