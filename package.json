@@ -1,6 +1,6 @@
 {
   "name": "@diory/diosphere-js",
-  "version": "0.2.6-rc3",
+  "version": "0.2.6-rc4",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
