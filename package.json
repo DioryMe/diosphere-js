@@ -1,8 +1,7 @@
 {
   "name": "@diory/diosphere-js",
-  "version": "0.2.6",
+  "version": "0.4.0-rc1",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -12,6 +11,9 @@
     "uuid": "8.3.2"
   },
   "devDependencies": {
+    "@diograph/local-client": "^0.4.1",
+    "@diory/connection-client-js": "^0.4.0",
+    "@diory/types": "^0.4.0",
     "@types/jest": "^27.4.0",
     "@types/uuid": "8.3.2",
     "jest": "^27.5.0",

@@ -1,4 +1,4 @@
-import { IRoomObject } from '../types'
+import { IRoomObject } from '@diory/types'
 
 export function propIsValid(roomObject: IRoomObject, prop: string): boolean {
   if (prop === 'id') {

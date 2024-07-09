@@ -1,4 +1,5 @@
 import {
+  IConnectionClient,
   IRoom,
   IRoomObject,
   IDiosphere,
@@ -7,26 +8,46 @@ import {
   IConnectionObject,
   IDoorObject,
   IDiosphereObject,
-} from '../types'
+} from '@diory/types'
 
 import { Room } from '../room/room'
 
-import { queryDiosphere } from '../utils/queryDiosphere'
+import { queryRooms } from '../utils/queryRooms'
+
 import { throwErrorIfNotFound } from '../utils/throwErrorIfNotFound'
 import { throwErrorIfAlreadyExists } from '../utils/throwErrorIfAlreadyExists'
+import { debounce } from '../utils/debounce'
 
 function isRoomAlias(roomObject: IRoomObject, room: IRoom) {
   return room.id !== roomObject.id
 }
 
 class Diosphere implements IDiosphere {
+  connectionClient: IConnectionClient
   rooms: { [index: string]: IRoom } = {}
 
-  constructor(diosphereObject?: IDiosphereObject) {
+  constructor(connectionClient: IConnectionClient) {
+    this.connectionClient = connectionClient
+  }
+
+  initialise = (connections: IConnectionObject[] = []): IDiosphere => {
+    this.rooms = {}
+    this.connectionClient.initialiseConnections(connections)
+    return this
+  }
+
+  getDiosphere = async (): Promise<IDiosphere> => {
+    const diosphereObject = await this.connectionClient.getDiosphere()
     if (diosphereObject) {
       this.addDiosphere(diosphereObject)
     }
+    return this
   }
+
+  saveDiosphere = debounce(async (): Promise<IDiosphere> => {
+    await this.connectionClient.saveDiosphere(this.toObject())
+    return this
+  }, 1000)
 
   addDiosphere = (diosphere: IDiosphereObject): IDiosphere => {
     const { rooms = {} } = diosphere
@@ -41,14 +62,8 @@ class Diosphere implements IDiosphere {
     return this
   }
 
-  queryRooms = (queryRoom: IRoomProps): IDiosphere => {
-    const rooms: IRoomsObject = queryDiosphere(queryRoom, this.toObject().rooms)
-    return new Diosphere({ rooms })
-  }
-
-  resetRooms = (): IDiosphere => {
-    this.rooms = {}
-    return this
+  queryRooms = (queryRoom: IRoomProps): IRoomsObject => {
+    return queryRooms(queryRoom, this.toObject().rooms)
   }
 
   getRoom = (roomObject: IRoomObject): IRoom => {
@@ -123,8 +138,6 @@ class Diosphere implements IDiosphere {
 
     return this.getRoom(roomObject).removeConnection(connectionObject).save(this.saveDiosphere)
   }
-
-  saveDiosphere = async (): Promise<IDiosphere> => Promise.resolve(this)
 
   toObject = (): { rooms: IRoomsObject; room?: IRoomObject } => {
     const rooms: IRoomsObject = {}

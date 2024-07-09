@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid'
 
-import { IRoom, IRoomObject, IRoomProps, IDoorObject, IConnectionObject } from '../types'
+import { IRoom, IRoomObject, IRoomProps, IDoorObject, IConnectionObject } from '@diory/types'
 
 import { propIsValid, valueIsValid, valueExists } from '../utils/validators'
 import { throwErrorIfNotFound } from '../utils/throwErrorIfNotFound'

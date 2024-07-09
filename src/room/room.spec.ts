@@ -1,4 +1,4 @@
-import { IRoom, IRoomProps } from '../types'
+import { IRoom, IRoomProps } from '@diory/types'
 import { Room } from './room'
 
 jest.mock('uuid', () => ({
