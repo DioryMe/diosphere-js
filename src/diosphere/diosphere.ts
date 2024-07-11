@@ -23,29 +23,34 @@ function isRoomAlias(roomObject: IRoomObject, room: IRoom) {
 }
 
 class Diosphere implements IDiosphere {
-  connectionClient: IConnectionClient
+  connectionClient?: IConnectionClient
   rooms: { [index: string]: IRoom } = {}
 
-  constructor(connectionClient: IConnectionClient) {
-    this.connectionClient = connectionClient
+  constructor(diosphereObject?: IDiosphereObject) {
+    if (diosphereObject) {
+      this.addDiosphere(diosphereObject)
+    }
   }
 
-  initialise = (connections: IConnectionObject[] = []): IDiosphere => {
-    this.rooms = {}
-    this.connectionClient.initialiseConnections(connections)
+  connect = (connectionClient: IConnectionClient): IDiosphere => {
+    this.connectionClient = connectionClient
     return this
   }
 
   getDiosphere = async (): Promise<IDiosphere> => {
-    const diosphereObject = await this.connectionClient.getDiosphere()
-    if (diosphereObject) {
-      this.addDiosphere(diosphereObject)
+    if (this.connectionClient) {
+      const diosphereObject = await this.connectionClient.getDiosphere()
+      if (diosphereObject) {
+        this.addDiosphere(diosphereObject)
+      }
     }
     return this
   }
 
   saveDiosphere = debounce(async (): Promise<IDiosphere> => {
-    await this.connectionClient.saveDiosphere(this.toObject())
+    if (this.connectionClient) {
+      await this.connectionClient.saveDiosphere(this.toObject())
+    }
     return this
   }, 1000)
 
@@ -64,6 +69,11 @@ class Diosphere implements IDiosphere {
 
   queryRooms = (queryRoom: IRoomProps): IRoomsObject => {
     return queryRooms(queryRoom, this.toObject().rooms)
+  }
+
+  resetRooms = (): IDiosphere => {
+    this.rooms = {}
+    return this
   }
 
   getRoom = (roomObject: IRoomObject): IRoom => {

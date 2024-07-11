@@ -307,10 +307,10 @@
   dependencies:
     path-browserify "^1.0.1"
 
-"@diory/types@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@diory/types/-/types-0.4.0.tgz#2bf87254fb791b8d5cde487d560aa0081fb0b388"
-  integrity sha512-meOING0ct3b8s9J6Wi1XUFFeLluUUkslmwKzOrwxP6yn1/x1BMZtJsxswaSfovmq0brx/yAXTCxY5V+Bp8SVtQ==
+"@diory/types@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@diory/types/-/types-0.4.1.tgz#790c8a2d16123f49cf2bf5194bcc5be13274bdeb"
+  integrity sha512-j3nWBvcP+uXflQjhyhiAPis0V1WG3zDRxPNOq7LxpolS2Cv/1AUyud4vXcuJq10fhO2CvvBx8Q3x2RJP+etwuQ==
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"

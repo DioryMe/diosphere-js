@@ -22,9 +22,7 @@ describe('diosphere', () => {
           text: 'some-text',
         },
       }
-      const dataClient: IDataClient = new LocalClient()
-      const connectionClient: IConnectionClient = new ConnectionClient([dataClient])
-      diosphere = new Diosphere(connectionClient).addDiosphere({ rooms })
+      diosphere = new Diosphere().addDiosphere({ rooms })
       diosphere.saveDiosphere = jest.fn()
     })
 
@@ -42,13 +40,16 @@ describe('diosphere', () => {
       })
     })
 
-    describe('when initialise()', () => {
+    describe('when connect()', () => {
+      let connectionClient: IConnectionClient
       beforeEach(() => {
-        diosphere.initialise([{ id: 'some-id', client: 'some-client', address: 'some-address' }])
+        const dataClient: IDataClient = new LocalClient()
+        connectionClient = new ConnectionClient([dataClient])
+        diosphere.connect(connectionClient)
       })
 
-      it('resets diosphere to empty object', () => {
-        expect(diosphere.rooms).toStrictEqual({})
+      it('adds connection client', () => {
+        expect(diosphere.connectionClient).toStrictEqual(connectionClient)
       })
 
       it('does not save diosphere', () => {
