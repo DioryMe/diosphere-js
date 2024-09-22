@@ -1,9 +1,7 @@
 import { v4 as uuid } from 'uuid'
-import { IDataClient, IConnectionClient, IDiosphere, IRoomsObject, IRoom } from '@diory/types'
-import { LocalClient } from '@diograph/local-client'
-import { ConnectionClient } from '@diory/connection-client-js'
+import { IRoomsObject, IRoom } from '@diory/types'
 
-import { Diosphere } from './diosphere'
+import { Diosphere, IDiosphere } from './diosphere'
 
 // Mocks
 jest.mock('uuid')
@@ -40,23 +38,6 @@ describe('diosphere', () => {
       })
     })
 
-    describe('when connect()', () => {
-      let connectionClient: IConnectionClient
-      beforeEach(() => {
-        const dataClient: IDataClient = new LocalClient()
-        connectionClient = new ConnectionClient([dataClient])
-        diosphere.connect(connectionClient)
-      })
-
-      it('adds connection client', () => {
-        expect(diosphere.connectionClient).toStrictEqual(connectionClient)
-      })
-
-      it('does not save diosphere', () => {
-        expect(diosphere.saveDiosphere).not.toHaveBeenCalled()
-      })
-    })
-
     describe('when addDiosphere()', () => {
       describe('given other room', () => {
         beforeEach(() => {
@@ -73,8 +54,8 @@ describe('diosphere', () => {
           )
         })
 
-        it('does not save diosphere', () => {
-          expect(diosphere.saveDiosphere).not.toHaveBeenCalled()
+        it('saves diosphere', () => {
+          expect(diosphere.saveDiosphere).toHaveBeenCalled()
         })
 
         describe('when toObject()', () => {
@@ -266,63 +247,6 @@ describe('diosphere', () => {
           expect(() => {
             diosphere.getRoom({ id: 'other-id' })
           }).toThrow()
-        })
-      })
-    })
-
-    describe('given diosphere with query text in a room', () => {
-      beforeEach(() => {
-        diosphere.addDiosphere({
-          rooms: {
-            'query-id': {
-              id: 'query-id',
-              text: 'query-text',
-            },
-          },
-        })
-      })
-
-      describe('when queryRooms() with matching text query', () => {
-        let queryRooms: IRoomsObject
-        beforeEach(() => {
-          queryRooms = diosphere.queryRooms({ text: 'query' })
-        })
-
-        it('returns diosphere with query room', () => {
-          expect(queryRooms['query-id']).toStrictEqual(expect.objectContaining({ id: 'query-id' }))
-        })
-
-        it('does not save diosphere', () => {
-          expect(diosphere.saveDiosphere).not.toHaveBeenCalled()
-        })
-
-        describe('when toObject()', () => {
-          it('returns diosphere object', () => {
-            expect(queryRooms).toStrictEqual({
-              'query-id': expect.objectContaining({ id: 'query-id' }),
-            })
-          })
-        })
-      })
-
-      describe('when queryRooms() without matching text query', () => {
-        let queryRooms: IRoomsObject
-        beforeEach(() => {
-          queryRooms = diosphere.queryRooms({ text: 'other-query' })
-        })
-
-        it('returns empty diosphere', () => {
-          expect(queryRooms).toStrictEqual({})
-        })
-
-        it('does not save diosphere', () => {
-          expect(diosphere.saveDiosphere).not.toHaveBeenCalled()
-        })
-
-        describe('when toObject()', () => {
-          it('returns empty diosphere object', () => {
-            expect(queryRooms).toStrictEqual({})
-          })
         })
       })
     })

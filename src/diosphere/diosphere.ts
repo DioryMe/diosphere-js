@@ -1,18 +1,17 @@
+import { join } from 'path-browserify'
+
 import {
-  IConnectionClient,
   IRoom,
   IRoomObject,
-  IDiosphere,
   IRoomsObject,
   IRoomProps,
   IConnectionObject,
   IDoorObject,
   IDiosphereObject,
+  IDataClient,
 } from '@diory/types'
 
 import { Room } from '../room/room'
-
-import { queryRooms } from '../utils/queryRooms'
 
 import { throwErrorIfNotFound } from '../utils/throwErrorIfNotFound'
 import { throwErrorIfAlreadyExists } from '../utils/throwErrorIfAlreadyExists'
@@ -22,36 +21,72 @@ function isRoomAlias(roomObject: IRoomObject, room: IRoom) {
   return room.id !== roomObject.id
 }
 
+const DIOSPHERE_JSON = 'diosphere.json'
+
+export interface IDiosphere {
+  rooms: { [index: string]: IRoom }
+  dataClients?: IDataClient[]
+  connections?: IConnectionObject[]
+  getDiosphere: (connections: IConnectionObject[]) => Promise<IDiosphere>
+  saveDiosphere: (diosphereObject: IDiosphereObject) => Promise<IDiosphere>
+  addDiosphere: (diosphereObject: IDiosphereObject) => IDiosphere
+  resetRooms: () => IDiosphere
+  getRoom: (roomObject: IRoomObject) => IRoom
+  addRoom: (roomProps: IRoomProps | IRoomObject | IRoom, key?: string) => IRoom
+  updateRoom: (roomObject: IRoomObject) => IRoom
+  removeRoom: (roomObject: IRoomObject) => void
+  addRoomDoor: (roomObject: IRoomObject, doorObject: IDoorObject) => IRoom
+  removeRoomDoor: (roomObject: IRoomObject, doorObject: IDoorObject) => IRoom
+  addRoomConnection: (roomObject: IRoomObject, connectionObject: IConnectionObject) => IRoom
+  removeRoomConnection: (roomObject: IRoomObject, connectionObject: IConnectionObject) => IRoom
+  toObject: () => IDiosphereObject
+}
+
 class Diosphere implements IDiosphere {
-  connectionClient?: IConnectionClient
   rooms: { [index: string]: IRoom } = {}
+  dataClients: IDataClient[] = []
+  connections: IConnectionObject[] = []
 
-  constructor(diosphereObject?: IDiosphereObject) {
-    if (diosphereObject) {
-      this.addDiosphere(diosphereObject)
+  constructor(dataClients?: IDataClient[]) {
+    if (dataClients) {
+      this.dataClients = dataClients
     }
   }
 
-  connect = (connectionClient: IConnectionClient): IDiosphere => {
-    this.connectionClient = connectionClient
+  findDataClient = (
+    dataClients: IDataClient[],
+    { client }: IConnectionObject,
+  ): IDataClient | undefined => {
+    return dataClients?.find(({ type }) => type === client)
+  }
+
+  getDiosphere = async (connections: IConnectionObject[]): Promise<IDiosphere> => {
+    this.connections = connections // TODO: Store only connections that exist and are able to save
+    await Promise.all(
+      connections.map(async (connection: IConnectionObject) => {
+        const client = this.findDataClient(this.dataClients, connection)
+        if (client) {
+          const path = join(connection.address, DIOSPHERE_JSON)
+          const diosphereString = await client.readTextItem(path)
+          this.addDiosphere(JSON.parse(diosphereString))
+        }
+      }),
+    )
+
     return this
   }
 
-  getDiosphere = async (): Promise<IDiosphere> => {
-    if (this.connectionClient) {
-      const diosphereObject = await this.connectionClient.getDiosphere()
-      if (diosphereObject) {
-        this.addDiosphere(diosphereObject)
-      }
-    }
-    return this
-  }
-
-  saveDiosphere = debounce(async (): Promise<IDiosphere> => {
-    if (this.connectionClient) {
-      await this.connectionClient.saveDiosphere(this.toObject())
-    }
-    return this
+  saveDiosphere = debounce(async () => {
+    await Promise.all(
+      this.connections.map(async (connection: IConnectionObject) => {
+        const client = this.findDataClient(this.dataClients, connection)
+        if (client) {
+          const path = join(connection.address, DIOSPHERE_JSON)
+          await client.writeItem(path, this.toJson())
+        }
+        return
+      }),
+    )
   }, 1000)
 
   addDiosphere = (diosphere: IDiosphereObject): IDiosphere => {
@@ -64,11 +99,9 @@ class Diosphere implements IDiosphere {
       }
     })
 
-    return this
-  }
+    this.saveDiosphere()
 
-  queryRooms = (queryRoom: IRoomProps): IRoomsObject => {
-    return queryRooms(queryRoom, this.toObject().rooms)
+    return this
   }
 
   resetRooms = (): IDiosphere => {
